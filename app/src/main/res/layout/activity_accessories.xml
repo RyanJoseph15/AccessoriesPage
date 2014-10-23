@@ -30,6 +30,5 @@
             android:layout_height="fill_parent"
             android:id="@+id/accessories_fragment_container"/>
 
-
     </LinearLayout>
 </RelativeLayout>
