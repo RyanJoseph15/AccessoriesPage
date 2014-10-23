@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/trim_title_bar">
+
+            <TextView
+                android:textColor="@color/common_signin_btn_dark_text_default"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:padding="10dp"
+                android:text="Trim"
+                android:textSize="40sp"
+                android:id="@+id/trim_title" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/trim_title"
+                android:background="@drawable/border"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/common_signin_btn_dark_text_default"
+                    android:textSize="40sp"
+                    android:text="linear ft - "
+
+                    android:id="@+id/trim_linear_footage"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/common_signin_btn_dark_text_default"
+                    android:textSize="40sp"
+                    android:text="120"
+                    android:layout_toRightOf="@+id/trim_linear_footage"
+                    android:id="@+id/trim_linear_footage_value"/>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <HorizontalScrollView
+            android:layout_marginLeft="400dp"
+            android:layout_marginRight="100dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/trim_horizontalScrollView" >
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/trim_linear_layout">
+                <!--
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:id="@+id/trim1">
+
+                    <EditText
+                        android:clickable="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="25dp"
+                        android:background="@drawable/border"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:padding="5dp"
+                        android:text="0"
+                        android:textColor="@android:color/white"
+                        android:id="@+id/trim1_count"/>
+
+                    <TextView
+                        android:clickable="true"
+                        android:layout_width="wrap_content"
+                        android:textSize="25dp"
+                        android:background="@color/common_signin_btn_dark_text_default"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:padding="5dp"
+                        android:layout_height="wrap_content"
+                        android:text="2 x 2 Cedar"
+                        android:layout_toRightOf="@id/trim1_count"
+                        android:id="@+id/trim1_button" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/border"
+                        android:padding="5dp"
+                        android:visibility="invisible"
+                        android:layout_below="@id/trim1_button"
+                        android:id="@+id/trim1_ccContainer">
+
+                        <EditText
+                            android:clickable="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="25dp"
+                            android:background="@android:color/transparent"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textColor="@android:color/white"
+                            android:text="2.34"
+                            android:id="@+id/trim1_cost_amount"/>
+
+                        <TextView
+                            android:clickable="false"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="25dp"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textColor="@android:color/white"
+                            android:text=" per ft"
+                            android:layout_toRightOf="@id/trim1_cost_amount"
+                            android:id="@+id/trim1_cost_units"/>
+
+                    </RelativeLayout>
+                </RelativeLayout>
+                -->
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <TextView
+            android:clickable="true"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add"
+            android:textSize="30dp"
+            android:padding="5dp"
+            android:textColor="@android:color/background_light"
+            android:background="@drawable/button_pressed"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:id="@+id/add_trim_button"/>
+
+</RelativeLayout>

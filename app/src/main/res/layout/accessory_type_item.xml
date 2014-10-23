@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:id="@+id/trim1">
+
+    <EditText
+        android:clickable="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:background="@drawable/border"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:padding="5dp"
+        android:text="0"
+        android:textColor="@android:color/white"
+        android:id="@+id/trim1_count"/>
+
+    <TextView
+        android:clickable="true"
+        android:layout_width="wrap_content"
+        android:textSize="25dp"
+        android:background="@color/common_signin_btn_dark_text_default"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:padding="5dp"
+        android:layout_height="wrap_content"
+        android:text="2 x 2 Cedar"
+        android:layout_toRightOf="@id/trim1_count"
+        android:id="@+id/trim1_button" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border"
+        android:padding="5dp"
+        android:visibility="invisible"
+        android:layout_below="@id/trim1_button"
+        android:id="@+id/trim1_ccContainer">
+
+        <EditText
+            android:clickable="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25dp"
+            android:background="@android:color/transparent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/white"
+            android:text="2.34"
+            android:id="@+id/trim1_cost_amount"/>
+
+        <TextView
+            android:clickable="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/white"
+            android:text=" per ft"
+            android:layout_toRightOf="@id/trim1_cost_amount"
+            android:id="@+id/trim1_cost_units"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>
