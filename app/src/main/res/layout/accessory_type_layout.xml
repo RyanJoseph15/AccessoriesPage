@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/title_bar">
+
+            <TextView
+                android:textColor="@color/common_signin_btn_dark_text_default"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:padding="10dp"
+                android:textSize="40sp"
+                android:id="@+id/title" />
+
+            <RelativeLayout
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/title"
+                android:background="@drawable/border"
+                android:id="@+id/sub_title"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/common_signin_btn_dark_text_default"
+                    android:textSize="40sp"
+                    android:text="linear ft - "
+                    android:id="@+id/sub_title_text"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/common_signin_btn_dark_text_default"
+                    android:textSize="40sp"
+                    android:text="xxxx"
+                    android:layout_toRightOf="@id/sub_title_text"
+                    android:id="@+id/sub_title_amount"/>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <HorizontalScrollView
+            android:layout_marginLeft="400dp"
+            android:layout_marginRight="100dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/horizontalScrollView" >
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/linear_layout"/>
+        </HorizontalScrollView>
+
+        <TextView
+            android:clickable="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add"
+            android:textSize="30dp"
+            android:padding="5dp"
+            android:textColor="@android:color/background_light"
+            android:background="@drawable/button_pressed"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:id="@+id/add_item_button"/>
+
+</RelativeLayout>

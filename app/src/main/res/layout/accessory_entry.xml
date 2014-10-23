@@ -4,19 +4,19 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    android:id="@+id/trim1">
+    android:id="@+id/item">
 
     <EditText
         android:clickable="true"
+        android:inputType="number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="25dp"
         android:background="@drawable/border"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:padding="5dp"
-        android:text="0"
         android:textColor="@android:color/white"
-        android:id="@+id/trim1_count"/>
+        android:id="@+id/count"/>
 
     <TextView
         android:clickable="true"
@@ -26,9 +26,8 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:padding="5dp"
         android:layout_height="wrap_content"
-        android:text="2 x 2 Cedar"
-        android:layout_toRightOf="@id/trim1_count"
-        android:id="@+id/trim1_button" />
+        android:layout_toRightOf="@id/count"
+        android:id="@+id/button" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -36,19 +35,19 @@
         android:background="@drawable/border"
         android:padding="5dp"
         android:visibility="invisible"
-        android:layout_below="@id/trim1_button"
-        android:id="@+id/trim1_ccContainer">
+        android:layout_below="@id/button"
+        android:id="@+id/ccContainer">
 
         <EditText
             android:clickable="true"
+            android:inputType="numberDecimal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="25dp"
             android:background="@android:color/transparent"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@android:color/white"
-            android:text="2.34"
-            android:id="@+id/trim1_cost_amount"/>
+            android:id="@+id/cost_amount"/>
 
         <TextView
             android:clickable="false"
@@ -57,9 +56,8 @@
             android:textSize="25dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@android:color/white"
-            android:text=" per ft"
-            android:layout_toRightOf="@id/trim1_cost_amount"
-            android:id="@+id/trim1_cost_units"/>
+            android:layout_toRightOf="@id/cost_amount"
+            android:id="@+id/cost_units"/>
 
     </RelativeLayout>
 

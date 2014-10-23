@@ -5,7 +5,11 @@
         <item>per ft</item>
         <item>per ft<sup><small>2</small></sup></item>
         <item>per unit</item>
-        <item>other</item>
+    </string-array>
+
+    <string-array name="type_array">
+        <item>Linear ft</item>
+        <item>per unit</item>
     </string-array>
 
 </resources>

@@ -1,19 +1,16 @@
 package com.fasterbids.ryan.accessoriespage;
 
-import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.util.Log;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class AccessoriesFragment extends Fragment {
 
@@ -21,29 +18,68 @@ public class AccessoriesFragment extends Fragment {
     static TextView addTrimButton;
     static Context context;
     static boolean adminPermission = false;
-    LinearLayout myView;    //TODO: not a permanent solution
+    LinearLayout accTitleLayout;
+    static View myView;
     static TextView saveButton;
     static TextView addAccButton;
+    static RelativeLayout addAndSave;
+    static FragmentManager fmanager;
 
     //Generic class for layout items
-    public class ListItem {
+    public static class AccessoryType {
+        View view;
         String type;
-        RelativeLayout obj;
         TextView title;
-        RelativeLayout ccContainer;
-        EditText count;
-        TextView cost;
-        public ListItem(String type, RelativeLayout obj, TextView title, RelativeLayout ccContainer, EditText count, TextView cost) {
-            this.type = type;
-            this.obj = obj;
-            this.title = title;
-            this.ccContainer = ccContainer;     //count cost container
-            this.count = count;
-            this.cost = cost;
+        TextView subTitleText;
+        TextView subTitleAmount;
+        TextView add;
+        LinearLayout container;
+        RelativeLayout ccBox;
+        ArrayList<Accessory> accessoryList = new ArrayList<Accessory>();
+
+        public AccessoryType(View mView, String mType, TextView mTitle, TextView mSubTitleText, TextView mSubTitleAmount, TextView mAdd, LinearLayout mContainer, RelativeLayout mCCBox) {
+            this.view = mView;
+            this.type = mType;
+            this.title = mTitle;
+            this.subTitleText = mSubTitleText;
+            this.subTitleAmount = mSubTitleAmount;
+            this.add = mAdd;
+            this.container = mContainer;
+            this.ccBox = mCCBox;
+
+            this.add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    NewItemDialog dialog = new NewItemDialog(container);
+                    dialog.show(fmanager, "NewItemDialog");
+                }
+            });
+
         }
     }
+    static ArrayList<AccessoryType> AccessoryList = new ArrayList<AccessoryType>();
 
-    static ArrayList<ListItem> TrimList = new ArrayList<ListItem>();
+    public static class Accessory {
+        static EditText count;
+        TextView main;
+        RelativeLayout ccBox;
+        EditText costAmount;
+        TextView costUnits;
+        public Accessory(EditText mCount, TextView mMain, RelativeLayout mCCBox, EditText mCostAmount, TextView mCostUnits) {
+            this.count = mCount;
+            this.main = mMain;
+            this.ccBox = mCCBox;
+            this.costAmount = mCostAmount;
+            this.costUnits = mCostUnits;
+
+            this.main.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO: make increment counter
+                }
+            });
+        }
+    }
 
 /* Methods below here
 ----------------------------------------------------------------------------------------------------
@@ -69,11 +105,13 @@ public class AccessoriesFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.accessories_fragment, container, false);
         context = getActivity();
-
-        addTrimButton = (TextView) v.findViewById(R.id.add_trim_button);
-        addTrimButton.setOnClickListener(addButtons);
+        myView = v;
 
         addAccButton = (TextView) v.findViewById(R.id.add_acc);
+        addAccButton.setOnClickListener(addAccessoryType);
+
+        accTitleLayout = (LinearLayout) v.findViewById(R.id.accLinLayout);
+        addAndSave = (RelativeLayout) v.findViewById(R.id.add_and_save);
 
         saveButton = (TextView) v.findViewById(R.id.save_changes);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -98,181 +136,138 @@ public class AccessoriesFragment extends Fragment {
             }
         });
 
-        RelativeLayout trim1 = (RelativeLayout) v.findViewById(R.id.trim1);
-        TextView trim1Button = (TextView) v.findViewById(R.id.trim1_button);
-        RelativeLayout trim1ccContainer = (RelativeLayout) v.findViewById(R.id.trim1_ccContainer);
-        EditText trim1Count = (EditText) v.findViewById(R.id.trim1_count);
-        TextView trim1Cost = (TextView) v.findViewById(R.id.trim1_cost_amount);
-        TrimList.add(new ListItem("Trim", trim1, trim1Button, trim1ccContainer, trim1Count, trim1Cost));
-
-        myView = (LinearLayout) v.findViewById(R.id.trim_linear_layout);
-
-        for (ListItem item : TrimList) {
-            //fail-safe check for Trim Type
-            if (item.type.equals("Trim")) {
-                item.title.setOnClickListener(titleButtons);
-            }
-        }
+        fmanager = getFragmentManager();
 
         return v;
     }
 
-    View.OnClickListener titleButtons = new View.OnClickListener() {
+    View.OnClickListener addAccessoryType = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            //TODO
-            //find the associated "subtext" to the "title"
-            //Log.d("v: ", v.toString());
-            TextView count = null;
-            for (ListItem item : TrimList) {
-                //Log.d("item.title: ", item.title.toString());
-                if (item.type.equals("Trim") && item.title.equals(v)) {
-                    Log.d("Trim && equal", "match");
-                    count = item.count;
-                } else if (item.type.equals("Trim") &&
-                        !item.title.equals(v) &&
-                        Integer.valueOf(item.count.getText().toString()) != 0) {
-                    //if there is another trim that is selected, we want to reset all it's values
-                    Log.d("Trim && !equal && selected", "match");
-                    item.title.setBackgroundColor(getResources().getColor(R.color.wallet_highlighted_text_holo_dark));
-                    item.count.setVisibility(View.INVISIBLE);
-                    item.count.setText("0");
-                }
-            }
-            v.setBackground(getResources().getDrawable(R.drawable.border_blue_filled));
-            if (count != null) {
-                //increment the count
-                count.setText(String.valueOf(Integer.parseInt(count.getText().toString()) + 1));
-            }
-            //and have the "subtext" appear when "title" is clicked.
-            //if not already selected, turn blue
-            //add 1 to subtext
-        }
-    };
-
-    View.OnClickListener addButtons = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            /* layout is as follows:
-                relative layout - new item
-                    edit text - count
-                    text view - title
-                    relative layout - pricing
-                        edit text - price
-                        text view - per unit
-             */
-            //dialog here would be good
-            String type = "Trim";   //TODO: make not hard coded
-            RelativeLayout ccContainer = new RelativeLayout(context);
-            LinearLayout parentLinearLayout = (LinearLayout) myView.findViewById(R.id.trim_linear_layout);   //TODO: make not hard coded
-            NewItemDialog dialog = new NewItemDialog(type, ccContainer, parentLinearLayout);
-            dialog.show(getFragmentManager(), "newItemDialog");
-        }
-    };
-
-    View.OnClickListener addAccessory = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            /* layout is as follows:
-                relative layout
-                        relative layout
-                            textview - title for new accessory
-                            relative layout - additional information (like lin. ft)
-                                textview - title of add. info
-                                textview - value of add. info
-                        horizontalscrollview
-                            linear layout
-                                relative layout - new item
-                                ...
-
-
-             */
+            NewAccessoryDialog dialog = new NewAccessoryDialog();
+            dialog.show(getFragmentManager(), "newAccessoryDialog");
         }
     };
 
     public static void grantAdminPermission() {
         //Called from PasswordDialog.java
         //This is where we will make all of the admin features (editing) visible
+        adminPermission = true;
         Toast toast = Toast.makeText(context, "admin", Toast.LENGTH_SHORT);
         toast.show();
-
-        for (ListItem item : TrimList) {
-            item.ccContainer.setVisibility(View.VISIBLE);
-        }
         addAccButton.setVisibility(View.VISIBLE);
         saveButton.setVisibility(View.VISIBLE);
-        addTrimButton.setVisibility(View.VISIBLE);
-        adminPermission = true;
+
+        for (AccessoryType accType : AccessoryList) {
+            accType.add.setVisibility(View.VISIBLE);
+            for (Accessory acc : accType.accessoryList) {
+                acc.ccBox.setVisibility(View.VISIBLE);
+            }
+        }
+
     }
 
     public static void revokeAdminPermission() {
-
-        for (ListItem item : TrimList) {
-            item.ccContainer.setVisibility(View.INVISIBLE);
-        }
+        adminPermission = false;
         addAccButton.setVisibility(View.INVISIBLE);
         saveButton.setVisibility(View.INVISIBLE);
-        addTrimButton.setVisibility(View.INVISIBLE);
-        adminPermission = false;
+        for (AccessoryType accType : AccessoryList) {
+            accType.add.setVisibility(View.INVISIBLE);
+            for (Accessory acc : accType.accessoryList) {
+                acc.ccBox.setVisibility(View.INVISIBLE);
+            }
+        }
     }
 
     private void saveState() {
         //save the state of the arrayList
     }
 
-    public static void makeNewItem(String mType, EditText mName, RelativeLayout ccContainer, EditText mCost, Spinner mUnits, LinearLayout parent) {
-        /*
-        //Generic class for layout items
-        public class ListItem {
-            String type;
-            RelativeLayout obj;
-            TextView title;
-            RelativeLayout ccContainer;
-            EditText count;
-            TextView cost;
-            public ListItem(String type, RelativeLayout obj, TextView title, RelativeLayout ccContainer, EditText count, TextView cost) {
-                this.type = type;
-                this.obj = obj;
-                this.title = title;
-                this.ccContainer = ccContainer;     //count cost container
-                this.count = count;
-                this.cost = cost;
+    public static void makeNewItem(EditText mName, EditText mCost, Spinner mUnits, LinearLayout parent) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        //RelativeLayout item = (RelativeLayout) parent.findViewById(R.id.item);
+        LinearLayout item = (LinearLayout) parent.findViewById(R.id.linear_layout);
+        View acc = inflater.inflate(R.layout.accessory_entry, item, false);
+
+        //create Accessory object
+        TextView main = (TextView) acc.findViewById(R.id.button);
+        TextView costUnits = (TextView) acc.findViewById(R.id.cost_units);
+        EditText count = (EditText) acc.findViewById(R.id.count);
+        EditText costAmount = (EditText) acc.findViewById(R.id.cost_amount);
+        RelativeLayout ccBox = (RelativeLayout) acc.findViewById(R.id.ccContainer);
+        Accessory newAcc = new Accessory(count, main, ccBox, costAmount, costUnits);
+
+        AccessoryType parentType = null;
+        for (AccessoryType type : AccessoryList) {
+            if (type.container.equals(parent)) {
+                parentType = type;
             }
         }
-         */
+        if (parentType != null) {
+            boolean okayToAdd = true;
+            for (Accessory accItem : parentType.accessoryList) {
+                String toCompare = accItem.main.getText().toString();
+                if (toCompare.equals(main.getText().toString())) {
+                    okayToAdd = false;
+                }
+            }
 
-        //use layout inflater
+            if (okayToAdd) {
+                //final setup
+                newAcc.main.setText(mName.getText().toString());
+                newAcc.costAmount.setText(mCost.getText().toString());
+                newAcc.costUnits.setText(mUnits.getSelectedItem().toString());
+                newAcc.ccBox.setVisibility(View.VISIBLE);
 
+                parentType.accessoryList.add(newAcc);
+                item.addView(acc);
 
-        RelativeLayout obj = new RelativeLayout(context);
-        TextView title = (TextView) mName;
-        EditText count = new EditText(context);
-        TextView cost = (TextView) mCost;
-        //TextView units = (TextView) mUnits;
-
-        //need to layout the components now:
-        //obj is the super Relative Layout
-/*
-        RelativeLayout.LayoutParams superRelative = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        superRelative.setMargins(10,10,10,10);
-
-        RelativeLayout.LayoutParams containerRelative = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-
-        obj.addView(count, superRelative);
-        obj.addView(title, superRelative);
-        obj.addView(ccContainer, superRelative);
-
-        ccContainer.addView(cost, containerRelative);
-        ccContainer.addView(units, containerRelative);
- */
-        if (parent == null) {
-            Toast toast = Toast.makeText(context, "parent null", Toast.LENGTH_SHORT);
-            toast.show();
-        } else {
-            Toast toast = Toast.makeText(context, "parent not null", Toast.LENGTH_SHORT);
-            toast.show();
+            }
         }
+    }
+
+    public static void addAccessoryType(String mTitle, String mType) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LinearLayout row = (LinearLayout) myView.findViewById(R.id.accLinLayout);
+        View acc = inflater.inflate(R.layout.accessory_type_layout, row, false);
+        View line = inflater.inflate(R.layout.line_divider, row, false);
+
+        //create accessoryType object
+        TextView title = (TextView) acc.findViewById(R.id.title);
+        TextView subTitleText = (TextView) acc.findViewById(R.id.sub_title_text);
+        TextView subTitleAmount = (TextView) acc.findViewById(R.id.sub_title_amount);
+        TextView add = (TextView) acc.findViewById(R.id.add_item_button);
+        LinearLayout container = (LinearLayout) acc.findViewById(R.id.linear_layout);
+        RelativeLayout ccBox = (RelativeLayout) acc.findViewById(R.id.sub_title);
+        AccessoryType newAcc = new AccessoryType(acc, mType, title, subTitleText, subTitleAmount, add, container, ccBox);
+
+        //wouldn't make sense to have more than one title that is the same:
+        boolean okayToAdd = true;
+        for (AccessoryType accType : AccessoryList) {
+            String toCompare = accType.title.getText().toString();
+           if (toCompare.equals(mTitle)) {
+               okayToAdd = false;
+           }
+        }
+       if (okayToAdd) {
+           AccessoryList.add(newAcc);
+
+           //modify values
+           newAcc.title.setText(mTitle);
+           if (newAcc.type.equals("Linear ft")) {
+               newAcc.ccBox.setVisibility(View.VISIBLE);
+           } else {
+               newAcc.ccBox.setVisibility(View.INVISIBLE);
+           }
+
+           //add views
+           row.addView(acc);
+           row.addView(line);
+
+       } else {
+           Toast toast = Toast.makeText(context, "Accessory: \"" + mTitle + "\" already in list.", Toast.LENGTH_SHORT);
+           toast.show();
+       }
 
 
 

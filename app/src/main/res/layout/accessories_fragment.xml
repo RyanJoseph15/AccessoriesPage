@@ -33,360 +33,55 @@
             android:id="@+id/admin_button" />
     </RelativeLayout>
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_below="@id/title_bar"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
-<!--
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+    <RelativeLayout
+        android:id="@+id/add_and_save"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="20dp">
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/trim_title_bar">
-
-                <TextView
-                    android:textColor="@color/common_signin_btn_dark_text_default"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:padding="10dp"
-                    android:text="Trim"
-                    android:textSize="40sp"
-                    android:id="@+id/trim_title" />
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/trim_title"
-                    android:background="@drawable/border"
-                    android:padding="10dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/common_signin_btn_dark_text_default"
-                        android:textSize="40sp"
-                        android:text="linear ft - "
-
-                        android:id="@+id/trim_linear_footage"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/common_signin_btn_dark_text_default"
-                        android:textSize="40sp"
-                        android:text="120"
-                        android:layout_toRightOf="@+id/trim_linear_footage"
-                        android:id="@+id/trim_linear_footage_value"/>
-
-                    </RelativeLayout>
-
-                </RelativeLayout>
-
-            <HorizontalScrollView
-                android:layout_marginLeft="400dp"
-                android:layout_marginRight="100dp"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/trim_horizontalScrollView" >
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:id="@+id/trim_linear_layout">
-
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:id="@+id/trim1">
-
-                        <EditText
-                            android:clickable="true"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="25dp"
-                            android:background="@drawable/border"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:padding="5dp"
-                            android:text="0"
-                            android:textColor="@android:color/white"
-                            android:id="@+id/trim1_count"/>
-
-                        <TextView
-                            android:clickable="true"
-                            android:layout_width="wrap_content"
-                            android:textSize="25dp"
-                            android:background="@color/common_signin_btn_dark_text_default"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:padding="5dp"
-                            android:layout_height="wrap_content"
-                            android:text="2 x 2 Cedar"
-                            android:layout_toRightOf="@id/trim1_count"
-                            android:id="@+id/trim1_button" />
-
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/border"
-                            android:padding="5dp"
-                            android:visibility="invisible"
-                            android:layout_below="@id/trim1_button"
-                            android:id="@+id/trim1_ccContainer">
-
-                            <EditText
-                                android:clickable="true"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="25dp"
-                                android:background="@android:color/transparent"
-                                android:textAppearance="?android:attr/textAppearanceLarge"
-                                android:textColor="@android:color/white"
-                                android:text="2.34"
-                                android:id="@+id/trim1_cost_amount"/>
-
-                            <TextView
-                                android:clickable="false"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="25dp"
-                                android:textAppearance="?android:attr/textAppearanceLarge"
-                                android:textColor="@android:color/white"
-                                android:text=" per ft"
-                                android:layout_toRightOf="@id/trim1_cost_amount"
-                                android:id="@+id/trim1_cost_units"/>
-
-                        </RelativeLayout>
-                    </RelativeLayout>
-                </LinearLayout>
-            </HorizontalScrollView>
-
-            <TextView
-                android:clickable="true"
-                android:visibility="invisible"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add"
-                android:textSize="30dp"
-                android:padding="5dp"
-                android:textColor="@android:color/background_light"
-                android:background="@drawable/button_pressed"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
-                android:id="@+id/add_trim_button"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="50dp"
-            android:paddingRight="50dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="3dp"
-                android:background="@android:color/background_light"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/sealant_title_bar">
-
-                <TextView
-                    android:textColor="@color/common_signin_btn_dark_text_default"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:padding="10dp"
-                    android:text="Sealant"
-                    android:textSize="40sp"
-                    android:id="@+id/sealant_title" />
-
-                <RelativeLayout
-                    android:visibility="invisible"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/sealant_title"
-                    android:background="@drawable/border"
-                    android:padding="10dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/common_signin_btn_dark_text_default"
-                        android:textSize="40sp"
-                        android:text="linear ft - "
-
-                        android:id="@+id/sealant_linear_footage"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/common_signin_btn_dark_text_default"
-                        android:textSize="40sp"
-                        android:text="120"
-                        android:layout_toRightOf="@+id/sealant_linear_footage"
-                        android:id="@+id/sealant_linear_footage_value"/>
-
-                </RelativeLayout>
-
-            </RelativeLayout>
-
-            <HorizontalScrollView
-                android:layout_marginLeft="400dp"
-                android:layout_marginRight="100dp"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/sealant_horizontalScrollView" >
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
-
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:id="@+id/sealant1">
-
-                        <EditText
-                            android:clickable="true"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="25dp"
-                            android:background="@drawable/border"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:padding="5dp"
-                            android:text="0"
-                            android:textColor="@android:color/white"
-                            android:id="@+id/sealant1_count"/>
-
-                        <TextView
-                            android:clickable="true"
-                            android:layout_width="wrap_content"
-                            android:textSize="25dp"
-                            android:background="@color/common_signin_btn_dark_text_default"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:padding="5dp"
-                            android:layout_height="wrap_content"
-                            android:text="Vulkem 116"
-                            android:layout_toRightOf="@id/sealant1_count"
-                            android:id="@+id/sealant1_button" />
-
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/border"
-                            android:padding="5dp"
-                            android:visibility="invisible"
-                            android:layout_below="@id/sealant1_button"
-                            android:id="@+id/sealant1_ccContainer">
-
-                            <EditText
-                                android:clickable="true"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="25dp"
-                                android:background="@android:color/transparent"
-                                android:textAppearance="?android:attr/textAppearanceLarge"
-                                android:textColor="@android:color/white"
-                                android:text="2.34"
-                                android:id="@+id/sealant1_cost_amount"/>
-
-                            <TextView
-                                android:clickable="false"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="25dp"
-                                android:textAppearance="?android:attr/textAppearanceLarge"
-                                android:textColor="@android:color/white"
-                                android:text=" per tube"
-                                android:layout_toRightOf="@id/sealant1_cost_amount"
-                                android:id="@+id/sealant1_cost_units"/>
-
-                        </RelativeLayout>
-                    </RelativeLayout>
-                </LinearLayout>
-            </HorizontalScrollView>
-
-            <TextView
-                android:clickable="true"
-                android:visibility="invisible"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add"
-                android:textSize="30dp"
-                android:padding="5dp"
-                android:textColor="@android:color/background_light"
-                android:background="@drawable/button_pressed"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
-                android:id="@+id/add_sealant_button"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="50dp"
-            android:paddingRight="50dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="3dp"
-                android:background="@android:color/background_light"/>
-
-        </RelativeLayout>
--->
-        <RelativeLayout
+        <TextView
+            android:visibility="invisible"
+            android:clickable="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="20dp">
+            android:layout_alignParentLeft="true"
+            android:text="Add Accessory"
+            android:textSize="35dp"
+            android:padding="5dp"
+            android:background="@drawable/button_pressed"
+            android:textColor="@color/common_signin_btn_text_dark"
+            android:id="@+id/add_acc"/>
 
-            <TextView
-                android:visibility="invisible"
-                android:clickable="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:text="Add Accessory"
-                android:textSize="35dp"
-                android:padding="5dp"
-                android:background="@drawable/button_pressed"
-                android:textColor="@color/common_signin_btn_text_dark"
-                android:id="@+id/add_acc"/>
+        <TextView
+            android:visibility="invisible"
+            android:clickable="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="Save Changes"
+            android:textSize="35dp"
+            android:padding="5dp"
+            android:background="@drawable/button_pressed"
+            android:textColor="@color/common_signin_btn_text_dark"
+            android:id="@+id/save_changes"/>
+    </RelativeLayout>
 
-            <TextView
-                android:visibility="invisible"
-                android:clickable="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="Save Changes"
-                android:textSize="35dp"
-                android:padding="5dp"
-                android:background="@drawable/button_pressed"
-                android:textColor="@color/common_signin_btn_text_dark"
-                android:id="@+id/save_changes"/>
+    <ScrollView
+        android:id="@+id/title_horizontal_scroll_view"
+        android:layout_below="@id/title_bar"
+        android:layout_above="@id/add_and_save"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
 
-            </RelativeLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:isScrollContainer="true"
+            android:id="@+id/accLinLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+        </LinearLayout>
 
-    </LinearLayout>
+    </ScrollView>
+
 </RelativeLayout>
