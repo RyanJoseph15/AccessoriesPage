@@ -10,8 +10,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
-import android.widget.Toast;
 
 /**
  * Created by Ryan on 10/16/2014.
@@ -39,8 +37,7 @@ public class NewItemDialog extends DialogFragment {
                             public void onClick(DialogInterface dialog, int id) {
                                 EditText name = (EditText) view.findViewById(R.id.item_name_value);
                                 EditText cost = (EditText) view.findViewById(R.id.item_cost_value);
-                                Spinner units = (Spinner) view.findViewById(R.id.item_units_value);
-                                AccessoriesFragment.makeNewItem(name, cost, units, parent);
+                                AccessoriesFragment.AddAccessory(name, cost, parent);
                                 getDialog().dismiss();
                             }
                         })

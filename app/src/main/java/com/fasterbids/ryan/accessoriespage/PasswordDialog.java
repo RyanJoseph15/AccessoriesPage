@@ -72,7 +72,7 @@ public class PasswordDialog extends DialogFragment implements DialogInterface.On
         Toast toast;
         Toast toast2 = Toast.makeText(getActivity(), "\"" + eText.getText().toString() + "\"", Toast.LENGTH_SHORT);
         //toast2.show();
-        if (eText.getText().toString().equals("password")) {
+        if (eText.getText().toString().equals("p")) {
             mess = "dismiss";
             toast  = Toast.makeText(getActivity(), mess, Toast.LENGTH_SHORT);
             getDialog().dismiss();

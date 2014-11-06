@@ -2,6 +2,7 @@ package com.fasterbids.ryan.accessoriespage;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,10 +23,12 @@ public class Accessories extends Activity {
             @Override
             public void onClick(View v) {
                 if (getFragmentManager().findFragmentByTag("accFrag") == null) {
+                    Log.d("accFrag found", "false");
                     Accessories.setBackgroundColor(getResources().getColor(R.color.grey));
                     getFragmentManager().beginTransaction().add(R.id.accessories_fragment_container,
                             new AccessoriesFragment(), "accFrag").addToBackStack(null).commit();
                 } else {
+                    Log.d("accFrag found", "true");
                     Accessories.setBackgroundColor(getResources().getColor(R.color.blue));
                     getFragmentManager().popBackStack();
                 }

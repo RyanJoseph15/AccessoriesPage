@@ -56,25 +56,4 @@
             android:id="@+id/item_cost_value" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Unit type: "
-            android:id="@+id/item_units" />
-
-        <Spinner
-            android:id="@+id/item_units_value"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:drawSelectorOnTop="true"
-            android:layout_toRightOf="@id/item_units"
-            android:entries="@array/units_array"
-            />
-    </RelativeLayout>
-
 </LinearLayout>
