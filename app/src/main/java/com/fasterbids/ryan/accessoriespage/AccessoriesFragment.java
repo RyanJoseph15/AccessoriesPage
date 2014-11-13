@@ -36,6 +36,7 @@ public class AccessoriesFragment extends Fragment {
 
     //Generic class for layout items
     public class AccessoryType {
+        String id;
         View view;
         String type;
         TextView title;
@@ -74,10 +75,7 @@ public class AccessoriesFragment extends Fragment {
                 public boolean onLongClick(View v) {
                     if (adminPermission) {
                         /* display are you sure to delete dialog */
-                        //TODO: remove from view
-                        AccessoryType.this.row.removeView(AccessoryType.this.view);
-                        AccessoryType.this.row.removeView(AccessoryType.this.line);
-                        AccessoryList.remove(AccessoryType.this);
+                        removeAccessoryType(AccessoryType.this);
                         return true;
                     }
                     return false;
@@ -88,9 +86,9 @@ public class AccessoriesFragment extends Fragment {
     ArrayList<AccessoryType> AccessoryList = new ArrayList<AccessoryType>();
 
     public class Accessory {
+        String id;  // main text: lower case and stripped of spaces
         View view;
         EditText count;
-        // TODO: make id that is main text, stripped of spaces and lowercase for unique id
         TextView main;
         RelativeLayout ccBox;
         EditText costAmount;
@@ -293,6 +291,8 @@ public class AccessoriesFragment extends Fragment {
         }
         // initialize some values
         if (parentType != null) {
+            newAcc.id = newAcc.main.getText().toString().toLowerCase().replaceAll("\\s+", "");
+            Log.d("newAcc.id", newAcc.id);
             String[] unitTypes = context.getResources().getStringArray(R.array.units_array);
             String type = parentType.type;
             if (type.equals("Linear ft")) {
@@ -309,7 +309,8 @@ public class AccessoriesFragment extends Fragment {
     private boolean PlaceAccInAccList(Accessory acc, ArrayList<Accessory> accList) {
         boolean okayToAdd = true;
         for (Accessory Acc : accList) {
-            if (Acc.main.getText().toString().equals(acc.main.getText().toString())) {
+            if (Acc.id.equals(acc.id)) {
+                /* using the id is a smarter way to check for duplicates */
                 okayToAdd = false;
             }
         }
@@ -360,15 +361,16 @@ public class AccessoriesFragment extends Fragment {
         TextView add = (TextView) acc.findViewById(R.id.add_item_button);
         LinearLayout container = (LinearLayout) acc.findViewById(R.id.linear_layout);
         RelativeLayout ccBox = (RelativeLayout) acc.findViewById(R.id.sub_title);
-        AccessoryType newAcc = new AccessoryType(acc, mType, title, subTitleText, subTitleAmount, add, container, ccBox, row, line);
-        return newAcc;
+        AccessoryType newAccT = new AccessoryType(acc, mType, title, subTitleText, subTitleAmount, add, container, ccBox, row, line);
+        newAccT.id = mTitle.toLowerCase().replaceAll("\\s+", "");
+        Log.d("newAccT", newAccT.id);
+        return newAccT;
     }
 
     private boolean PlaceAccTypeInAccTypeList(String title, AccessoryType accT) {
         boolean okayToAdd = true;
         for (AccessoryType accType : AccessoryList) {
-            String toCompare = accType.title.getText().toString();
-            if (toCompare.equals(accT.title.getText().toString())) {
+            if (accType.id.equals(accT.id)) {
                 okayToAdd = false;
             }
         }
@@ -400,6 +402,12 @@ public class AccessoriesFragment extends Fragment {
             Toast toast = Toast.makeText(context, "Accessory: \"" + mTitle + "\" already in list.", Toast.LENGTH_SHORT);
             toast.show();
         }
+    }
+
+    private void removeAccessoryType(AccessoryType accT) {
+        accT.row.removeView(accT.view);
+        accT.row.removeView(accT.line);
+        AccessoryList.remove(accT);
     }
 
     private void UpdateLinearLayout() {
