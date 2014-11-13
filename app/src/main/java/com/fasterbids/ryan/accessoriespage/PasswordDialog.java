@@ -18,6 +18,12 @@ import android.widget.Toast;
  */
 public class PasswordDialog extends DialogFragment implements DialogInterface.OnDismissListener {
 
+    AccessoriesFragment frag;
+
+    public PasswordDialog(AccessoriesFragment frag) {
+        this.frag = frag;
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
@@ -76,7 +82,7 @@ public class PasswordDialog extends DialogFragment implements DialogInterface.On
             mess = "dismiss";
             toast  = Toast.makeText(getActivity(), mess, Toast.LENGTH_SHORT);
             getDialog().dismiss();
-            AccessoriesFragment.grantAdminPermission();
+            frag.grantAdminPermission();
         } else {
             mess = "cancel";
             toast  = Toast.makeText(getActivity(), mess, Toast.LENGTH_SHORT);

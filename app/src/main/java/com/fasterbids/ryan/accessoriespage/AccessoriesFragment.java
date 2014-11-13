@@ -35,7 +35,7 @@ public class AccessoriesFragment extends Fragment {
     static JSONArray jsonAcc = new JSONArray();
 
     //Generic class for layout items
-    public static class AccessoryType {
+    public class AccessoryType {
         View view;
         String type;
         TextView title;
@@ -45,11 +45,12 @@ public class AccessoriesFragment extends Fragment {
         LinearLayout container;
         RelativeLayout ccBox;
         LinearLayout row;
+        View line;
         ArrayList<Accessory> accessoryList = new ArrayList<Accessory>();
 
         public AccessoryType(View mView, String mType, TextView mTitle, TextView mSubTitleText,
                              TextView mSubTitleAmount, TextView mAdd, LinearLayout mContainer,
-                             RelativeLayout mCCBox, LinearLayout row) {
+                             RelativeLayout mCCBox, LinearLayout row, View line) {
             this.view = mView;
             this.type = mType;
             this.title = mTitle;
@@ -59,20 +60,34 @@ public class AccessoriesFragment extends Fragment {
             this.container = mContainer;
             this.ccBox = mCCBox;
             this.row = row;
+            this.line = line;
 
             this.add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    NewItemDialog dialog = new NewItemDialog(container);
+                    NewItemDialog dialog = new NewItemDialog(container, AccessoriesFragment.this);
                     dialog.show(fmanager, "NewItemDialog");
                 }
             });
-
+            this.title.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (adminPermission) {
+                        /* display are you sure to delete dialog */
+                        //TODO: remove from view
+                        AccessoryType.this.row.removeView(AccessoryType.this.view);
+                        AccessoryType.this.row.removeView(AccessoryType.this.line);
+                        AccessoryList.remove(AccessoryType.this);
+                        return true;
+                    }
+                    return false;
+                }
+            });
         }
     }
-    static ArrayList<AccessoryType> AccessoryList = new ArrayList<AccessoryType>();
+    ArrayList<AccessoryType> AccessoryList = new ArrayList<AccessoryType>();
 
-    public static class Accessory {
+    public class Accessory {
         View view;
         EditText count;
         // TODO: make id that is main text, stripped of spaces and lowercase for unique id
@@ -102,17 +117,25 @@ public class AccessoriesFragment extends Fragment {
                     }
                 }
             });
-            /*
-            this.count.addTextChangedListener(new TextWatcher() {
+            this.main.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public void afterTextChanged(Editable s) {
-                    char[] value = null;
-                    s.getChars(0, 1, value, 0);
-                    if (s.length() == 1 && value.equals("0"));
+                public boolean onLongClick(View v) {
+                    if (adminPermission) {
+                        /* display are you sure to delete dialog */
+                        for (AccessoryType accT : AccessoryList) {
+                            for (Accessory acc : accT.accessoryList) {
+                                if (acc.equals(Accessory.this)) {
+                                    accT.accessoryList.remove(acc);
+                                    accT.container.removeView(acc.view);
+                                    break;
+                                }
+                            }
+                        }
+                        return true;
+                    }
+                    return false;
                 }
-                public void beforeTextChanged(CharSequence s, int start, int count, int after){}
-                public void onTextChanged(CharSequence s, int start, int before, int count){}
-            }); */
+            });
         }
     }
 
@@ -121,7 +144,7 @@ public class AccessoriesFragment extends Fragment {
  */
 
 
-    public static AccessoriesFragment newInstance() {
+    public AccessoriesFragment newInstance() {
         AccessoriesFragment fragment = new AccessoriesFragment();
         return fragment;
     }
@@ -162,7 +185,7 @@ public class AccessoriesFragment extends Fragment {
             public void onClick(View v) {
                 //Password confirm for admin permissions
                 if (!adminPermission) {
-                    PasswordDialog dialog = new PasswordDialog();
+                    PasswordDialog dialog = new PasswordDialog(AccessoriesFragment.this);
                     dialog.show(getFragmentManager(), "passwordDialog");
                 } else {
                     revokeAdminPermission();
@@ -177,10 +200,12 @@ public class AccessoriesFragment extends Fragment {
         boolean hasDb = accPrefs.getBoolean("inited", false);
         if (hasDb) {
             /* we need to load it into the layout */
+            Log.d("hasDb", "true");
             if (AccessoryList.isEmpty()) {
                 /* new instance of the fragment. popping off stack does not destroy fragment */
-                //Log.d("AccessoryList", "empty");
+                Log.d("AccessoryList", "empty");
                 int size = jsonAcc.length();
+
                 for (int i = 0; i < size; i++) {
                     try {
                         JSONObject obj = jsonAcc.getJSONObject(i);
@@ -196,16 +221,14 @@ public class AccessoriesFragment extends Fragment {
                 }
             } else {
                 /* fragment has been around, just need items to make visible? */
-                //Log.d("AccessoryList", "not empty");
+                Log.d("AccessoryList", "not empty");
                 UpdateLinearLayout();
             }
         } else {
             /* create it */
+            Log.d("hasDb", "false");
             editor.putBoolean("inited", true);
-            jsonAcc = new JSONArray();  //array of accessory types
-            // insert predefined accessories page here
-            editor.putString("accessories", jsonAcc.toString());
-            editor.commit();
+            /* SQLite stuff here */
         }
 
         return v;
@@ -214,12 +237,12 @@ public class AccessoriesFragment extends Fragment {
     View.OnClickListener addAccessoryType = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            NewAccessoryDialog dialog = new NewAccessoryDialog();
+            NewAccessoryDialog dialog = new NewAccessoryDialog(AccessoriesFragment.this);
             dialog.show(getFragmentManager(), "newAccessoryDialog");
         }
     };
 
-    public static void grantAdminPermission() {
+    public void grantAdminPermission() {
         //Called from PasswordDialog.java
         //This is where we will make all of the admin features (editing) visible
         adminPermission = true;
@@ -236,7 +259,7 @@ public class AccessoriesFragment extends Fragment {
         }
     }
 
-    public static void revokeAdminPermission() {
+    public void revokeAdminPermission() {
         adminPermission = false;
         addAccButton.setVisibility(View.INVISIBLE);
         saveButton.setVisibility(View.INVISIBLE);
@@ -248,7 +271,7 @@ public class AccessoriesFragment extends Fragment {
         }
     }
 
-    private static Accessory MakeAccessory(TextView mName, EditText mCost, LinearLayout parent) {
+    private Accessory MakeAccessory(TextView mName, EditText mCost, LinearLayout parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout item = (LinearLayout) parent.findViewById(R.id.linear_layout);
         View acc = inflater.inflate(R.layout.accessory_entry, item, false);
@@ -283,7 +306,7 @@ public class AccessoriesFragment extends Fragment {
         return newAcc;
     }
 
-    private static boolean PlaceAccInAccList(Accessory acc, ArrayList<Accessory> accList) {
+    private boolean PlaceAccInAccList(Accessory acc, ArrayList<Accessory> accList) {
         boolean okayToAdd = true;
         for (Accessory Acc : accList) {
             if (Acc.main.getText().toString().equals(acc.main.getText().toString())) {
@@ -296,11 +319,11 @@ public class AccessoriesFragment extends Fragment {
         return okayToAdd;   // if the acc was added
     }
 
-    private static void AddAccToLinLayout(Accessory acc, LinearLayout parent) {
+    private void AddAccToLinLayout(Accessory acc, LinearLayout parent) {
         acc.item.addView(acc.view);
     }
 
-    public static void AddAccessory(EditText mName, EditText mCost, LinearLayout parent) {
+    public void AddAccessory(EditText mName, EditText mCost, LinearLayout parent) {
         Accessory acc = MakeAccessory(mName, mCost, parent);
         // find parent type
         AccessoryType parentType = null;
@@ -323,47 +346,11 @@ public class AccessoriesFragment extends Fragment {
         }
     }
 
-    public static void addAccType2JSON(String title, String type) {
-        JSONObject object = new JSONObject();
-        try {
-            object.put("title", title);
-            object.put("type", type);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        int size = jsonAcc.length();
-        boolean okayToAdd = true;
-        for (int i = 0; i < size; i++) {
-            try {
-                JSONObject obj = jsonAcc.getJSONObject(i);
-                String mTitle = obj.getString("title");
-                String mType = obj.getString("type");
-                if (title.equals(mTitle)) {
-                    okayToAdd = false;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        if (okayToAdd) {
-            Log.d("jsonAcc", "put(object) okay");
-            jsonAcc.put(object);
-        }
-    }
-
-    public static void removeAccType(String title) {
-        for (AccessoryType accType : AccessoryList) {
-            String toCompare = accType.title.getText().toString();
-            if (toCompare.equals(title)) {
-                AccessoryList.remove(accType);
-            }
-        }
-    }
-
-    public static AccessoryType MakeAccessoryType(String mTitle, String mType) {
+    public AccessoryType MakeAccessoryType(String mTitle, String mType) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout row = (LinearLayout) myView.findViewById(R.id.accLinLayout);
         View acc = inflater.inflate(R.layout.accessory_type_layout, row, false);
+        View line = inflater.inflate(R.layout.line_divider, row, false);
 
         //create accessoryType object
         TextView title = (TextView) acc.findViewById(R.id.title);
@@ -373,11 +360,11 @@ public class AccessoriesFragment extends Fragment {
         TextView add = (TextView) acc.findViewById(R.id.add_item_button);
         LinearLayout container = (LinearLayout) acc.findViewById(R.id.linear_layout);
         RelativeLayout ccBox = (RelativeLayout) acc.findViewById(R.id.sub_title);
-        AccessoryType newAcc = new AccessoryType(acc, mType, title, subTitleText, subTitleAmount, add, container, ccBox, row);
+        AccessoryType newAcc = new AccessoryType(acc, mType, title, subTitleText, subTitleAmount, add, container, ccBox, row, line);
         return newAcc;
     }
 
-    private static boolean PlaceAccTypeInAccTypeList(String title, AccessoryType accT) {
+    private boolean PlaceAccTypeInAccTypeList(String title, AccessoryType accT) {
         boolean okayToAdd = true;
         for (AccessoryType accType : AccessoryList) {
             String toCompare = accType.title.getText().toString();
@@ -386,15 +373,14 @@ public class AccessoriesFragment extends Fragment {
             }
         }
         if (okayToAdd) {
-            //TODO: Add to json
+            //TODO: Add to SQLite
             AccessoryList.add(accT);
         }
         return okayToAdd;   // if the acc was added
     }
 
-    private static void AddAccTypeToLinLayout(AccessoryType accT) {
+    private void AddAccTypeToLinLayout(AccessoryType accT) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View line = inflater.inflate(R.layout.line_divider, accT.row, false);
         if (accT.type.equals("Linear ft")) {
             accT.ccBox.setVisibility(View.VISIBLE);
         } else {
@@ -402,10 +388,10 @@ public class AccessoriesFragment extends Fragment {
         }
         //add views
         accT.row.addView(accT.view);
-        accT.row.addView(line);
+        accT.row.addView(accT.line);
     }
 
-    public static void addAccessoryType(String mTitle, String mType) {
+    public void addAccessoryType(String mTitle, String mType) {
         AccessoryType accType = MakeAccessoryType(mTitle, mType);
         boolean acceptedAccType = PlaceAccTypeInAccTypeList(mTitle, accType);
         if (acceptedAccType) {
@@ -416,7 +402,7 @@ public class AccessoriesFragment extends Fragment {
         }
     }
 
-    private static void UpdateLinearLayout() {
+    private void UpdateLinearLayout() {
         /* necessary to update the views once the fragment gets recreated */
         // TODO: Reduce overhead
         ArrayList<AccessoryType> typeTemp = new ArrayList<AccessoryType>(AccessoryList);
