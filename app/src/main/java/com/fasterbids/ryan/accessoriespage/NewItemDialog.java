@@ -18,11 +18,9 @@ public class NewItemDialog extends DialogFragment {
 
     RelativeLayout ccContainer;
     LinearLayout parent;
-    AccessoriesFragment frag;
 
-    public NewItemDialog(LinearLayout parent, AccessoriesFragment frag){
+    public NewItemDialog(LinearLayout parent){
         this.parent = parent;
-        this.frag = frag;
     };
 
     @Override
@@ -39,7 +37,9 @@ public class NewItemDialog extends DialogFragment {
                             public void onClick(DialogInterface dialog, int id) {
                                 EditText name = (EditText) view.findViewById(R.id.item_name_value);
                                 EditText cost = (EditText) view.findViewById(R.id.item_cost_value);
-                                frag.AddAccessory(name, cost, parent);
+//                                Accessory acc = new Accessory(null, null, null, null, null, null, null);
+//                                acc.AddAccessory(name.getText().toString(), cost.getText().toString(), parent, true);
+                                Accessory acc = Accessory.AddAccessory(name.getText().toString(), null, cost.getText().toString(), parent, true, false);
                                 getDialog().dismiss();
                             }
                         })

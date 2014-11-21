@@ -75,11 +75,12 @@
         android:layout_height="fill_parent" >
 
         <LinearLayout
+            android:id="@+id/accLinLayout"
             android:orientation="vertical"
             android:isScrollContainer="true"
-            android:id="@+id/accLinLayout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
+
         </LinearLayout>
 
     </ScrollView>

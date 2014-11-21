@@ -16,18 +16,18 @@ android:background="@color/wallet_bright_foreground_holo_light">
     android:background="@drawable/button_pressed"
     android:layout_marginRight="@dimen/activity_vertical_margin"
     />
-
+<!-- to hold the cost_layout_items -->
 <LinearLayout
     android:id="@+id/costs_container"
-    android:visibility="invisible"
-    android:orientation="horizontal"
-    android:layout_width="fill_parent"
+    android:visibility="visible"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_below="@id/toggle_costs">
 </LinearLayout>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:visibility="invisible"
+    android:visibility="visible"
     android:id="@+id/divider"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -54,7 +54,7 @@ android:background="@color/wallet_bright_foreground_holo_light">
         android:id="@+id/total_cost"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:text="$XXXX"
+        android:text="$0.00"
         android:textSize="30dp"
         android:textColor="@color/common_signin_btn_dark_text_default"
         android:padding="5dp"

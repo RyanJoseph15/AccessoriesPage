@@ -1,6 +1,7 @@
 package com.fasterbids.ryan.accessoriespage;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -24,7 +25,9 @@ public class Accessory {
     EditText costAmount;
     TextView costUnits;
     LinearLayout item;
-    public Accessory(View view, EditText mCount, TextView mMain, RelativeLayout mCCBox, EditText mCostAmount, TextView mCostUnits, LinearLayout item) {
+    boolean selected;
+
+    public Accessory(View view, EditText mCount, TextView mMain, RelativeLayout mCCBox, EditText mCostAmount, TextView mCostUnits, LinearLayout item, boolean selected) {
         this.view = view;
         this.count = mCount;
         this.title = mMain;
@@ -32,26 +35,31 @@ public class Accessory {
         this.costAmount = mCostAmount;
         this.costUnits = mCostUnits;
         this.item = item;
+        this.selected = selected;
 
         this.title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Accessory.this.count.getText().toString().equals("")) {
-                    if (Accessory.this.costUnits.getText().toString().equals(" per unit")) {
+                if (Accessory.this.costUnits.getText().toString().equals(" per unit")) {
+                    if (Accessory.this.count.getText().toString().equals("")) {
                         Accessory.this.count.setText("1");
                     } else {
-                        for (AccessoryType accT : AccessoriesFragment.AccessoryList) {
-                            for (Accessory acc : accT.accessoryList) {
-                                acc.title.setBackgroundColor(AccessoriesFragment.context.getResources().getColor(R.color.common_signin_btn_dark_text_default));
-                                AccessoriesFragment.SQLiteHelper.updateAcc(acc);
-                            }
-                            if (accT.container.equals(Accessory.this.item)) break;
-                        }
+                        Accessory.this.count.setText(String.valueOf(Integer.valueOf(Accessory.this.count.getText().toString()) + 1));
                     }
                 } else {
-                    Accessory.this.count.setText(String.valueOf(Integer.valueOf(Accessory.this.count.getText().toString()) + 1));
+                    for (AccessoryType accT : AccessoriesFragment.AccessoryList) {
+                        if (accT.container.equals(Accessory.this.item)) {
+                            for (Accessory acc : accT.accessoryList) {
+                                acc.title.setBackgroundColor(AccessoriesFragment.context.getResources().getColor(R.color.common_signin_btn_dark_text_default));
+                                acc.selected = false;
+                                AccessoriesFragment.SQLiteHelper.updateAcc(acc);
+                            }
+                            break;
+                        }
+                    }
                 }
                 // update the db info for acc
+                Accessory.this.selected = true;
                 v.setBackgroundColor(AccessoriesFragment.context.getResources().getColor(R.color.blue));
                 AccessoriesFragment.SQLiteHelper.updateAcc(Accessory.this);
             }
@@ -59,7 +67,6 @@ public class Accessory {
         this.title.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Log.d("title.onLongClick", "Long clicked");
                 if (AccessoriesFragment.adminPermission) {
                 /* display are you sure to delete dialog */
                     for (AccessoryType accT : AccessoriesFragment.AccessoryList) {
@@ -88,13 +95,15 @@ public class Accessory {
                 if (Accessory.this.count.getText().toString().equals("") || Integer.valueOf(Accessory.this.count.getText().toString()).equals(0)) {
                     Accessory.this.title.setBackgroundColor(AccessoriesFragment.context.getResources().getColor(R.color.common_signin_btn_dark_text_default));
                     Accessory.this.count.setVisibility(View.INVISIBLE);
+                    Accessory.this.selected = false;
                 } else {
                     Accessory.this.title.setBackgroundColor(AccessoriesFragment.context.getResources().getColor(R.color.blue));
                     Accessory.this.count.setVisibility(View.VISIBLE);
+                    Accessory.this.selected = true;
                 }
                 // update db info for the acc
                 AccessoriesFragment.SQLiteHelper.updateAcc(Accessory.this);
-                Log.d("afterTextChanged", "updated");
+//                Log.d("afterTextChanged", String.valueOf(Accessory.this.selected));
             }
         });
     }
@@ -105,7 +114,7 @@ public class Accessory {
         AccessoriesFragment.SQLiteHelper.removeAcc(acc);
     }
 
-    public static Accessory MakeAccessory(String mName, String mCost, LinearLayout parent) {
+    public static Accessory MakeAccessory(String mName, String mCost, LinearLayout parent, boolean selected) {
         LayoutInflater inflater = (LayoutInflater) AccessoriesFragment.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout item = (LinearLayout) parent.findViewById(R.id.linear_layout);
         View acc = inflater.inflate(R.layout.accessory_entry, item, false);
@@ -117,7 +126,7 @@ public class Accessory {
         EditText costAmount = (EditText) acc.findViewById(R.id.cost_amount);
         costAmount.setText(mCost);
         RelativeLayout ccBox = (RelativeLayout) acc.findViewById(R.id.ccContainer);
-        Accessory newAcc = new Accessory(acc, count, main, ccBox, costAmount, costUnits, item);
+        Accessory newAcc = new Accessory(acc, count, main, ccBox, costAmount, costUnits, item, selected);
         // find parent view
         AccessoryType parentType = null;
         for (AccessoryType type : AccessoriesFragment.AccessoryList) {
@@ -158,10 +167,49 @@ public class Accessory {
 
     public static void AddAccToLinLayout(Accessory acc, LinearLayout parent) {
         acc.item.addView(acc.view);
+
+        // add accessories and calculate the prices
+        LayoutInflater inflater = (LayoutInflater) AccessoriesFragment.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        // TODO: could be optimized by adding a reference in the acc obj to the accT obj - Later
+        AccessoryType parentT = null;
+        for (AccessoryType accT : AccessoriesFragment.AccessoryList) {
+            if (accT.container.equals(parent)) {
+                parentT = accT;
+                break;
+            }
+        }
+        if (parentT != null && acc.selected) {
+            View item = inflater.inflate(R.layout.cost_item, parentT.costs, false);
+            TextView vCost = (TextView) item.findViewById(R.id.cost);
+            TextView vTitle = (TextView) item.findViewById(R.id.title);
+            TextView vQuant = (TextView) item.findViewById(R.id.quantity);
+            vTitle.setText(acc.title.getText().toString());
+//            Log.d("parentT.title", "'" + parentT.title.getText().toString() + "'");
+//            Log.d("parentT.type", "'" + parentT.type + "'");
+            float cost = Float.valueOf(acc.costAmount.getText().toString());
+            if (parentT.type.equals("Linear ft") || parentT.type.equals("Square ft")) {
+//                Log.d("type", "linear or square");
+                int amount = Integer.valueOf(parentT.subTitleAmount.getText().toString());
+                float fCost = amount * cost;
+                Log.d("cost", String.valueOf(fCost));
+                vCost.setText(String.valueOf(fCost));
+                vQuant.setText(parentT.subTitleAmount.getText().toString());
+            } else if (parentT.type.equals("per unit")) {
+//                Log.d("count", acc.count.getText().toString());
+//                Log.d("unit", "per unit");
+                int count = Integer.valueOf(acc.count.getText().toString());
+                float fCost = count * cost;
+//                Log.d("cost", String.valueOf(fCost));
+                vCost.setText(String.valueOf(fCost));
+                vQuant.setText(acc.count.getText().toString());
+            }
+//            // add it
+            parentT.costs.addView(item);
+        }
     }
 
-    public static Accessory AddAccessory(String mName, String mCost, LinearLayout parent, boolean ADD) {
-        Accessory acc = MakeAccessory(mName, mCost, parent);
+    public static Accessory AddAccessory(String mName, String mCost, String count, LinearLayout parent, boolean ADD, boolean selected) {
+        Accessory acc = MakeAccessory(mName, mCost, parent, selected);
         // find parent type
         AccessoryType parentType = null;
         for (AccessoryType type : AccessoriesFragment.AccessoryList) {
@@ -170,12 +218,13 @@ public class Accessory {
             }
         }
         if (parentType != null) {
+            acc.costAmount.setText(mCost);
+            acc.count.setText(count);
             boolean acceptedAcc = PlaceAccInAccList(acc, parentType.accessoryList);
             if (acceptedAcc) {
                 AddAccToLinLayout(acc, parent);
                 acc.parentTitle = parentType.title.getText().toString();
                 acc.title.setText(mName);
-                acc.costAmount.setText(mCost);
                 if (AccessoriesFragment.adminPermission) acc.ccBox.setVisibility(View.VISIBLE);
                 if (ADD) AccessoriesFragment.SQLiteHelper.addAcc(acc);
                 return acc;

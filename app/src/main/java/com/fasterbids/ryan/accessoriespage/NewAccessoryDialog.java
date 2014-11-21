@@ -15,10 +15,7 @@ import android.widget.Spinner;
  */
 public class NewAccessoryDialog extends DialogFragment  {
 
-    AccessoriesFragment frag;
-
-    public NewAccessoryDialog(AccessoriesFragment frag) {
-        this.frag = frag;
+    public NewAccessoryDialog() {
     }
 
     @Override
@@ -37,7 +34,9 @@ public class NewAccessoryDialog extends DialogFragment  {
                                 Spinner mySpinner = (Spinner) view.findViewById(R.id.acc_type);
                                 String title = myTitle.getText().toString();
                                 String type = mySpinner.getSelectedItem().toString();
-                                frag.addAccessoryType(title, type);
+//                                AccessoryType accT = new AccessoryType(null, null, null, null, null, null, null, null, null, null);
+//                                accT.addAccessoryType(title, type, true);
+                                AccessoryType accT = AccessoryType.addAccessoryType(title, type, true);
                                 getDialog().dismiss();
                             }
                         })

@@ -2,9 +2,9 @@
 <resources>
 
     <string-array name="units_array">
-        <item> per ft</item>
-        <item> per ft<sup><small>2</small></sup></item>
-        <item> per unit</item>
+        <item>" per ft"</item>
+        <item> "per ft<sup><small>2</small></sup>"</item>
+        <item>" per unit"</item>
     </string-array>
 
     <string-array name="type_array">

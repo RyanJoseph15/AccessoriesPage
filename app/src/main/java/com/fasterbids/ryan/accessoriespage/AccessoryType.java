@@ -28,6 +28,8 @@ public class AccessoryType {
     View line;
     ArrayList<Accessory> accessoryList = new ArrayList<Accessory>();
 
+    LinearLayout costs;
+
     public AccessoryType(View mView, String mType, TextView mTitle, TextView mSubTitleText,
                          TextView mSubTitleAmount, TextView mAdd, LinearLayout mContainer,
                          RelativeLayout mCCBox, LinearLayout row, View line) {
@@ -100,6 +102,10 @@ public class AccessoryType {
 
     public static void AddAccTypeToLinLayout(AccessoryType accT) {
         if (accT.type.equals("Linear ft")) {
+            accT.subTitleText.setText("Linear ft - ");
+            accT.ccBox.setVisibility(View.VISIBLE);
+        } else if (accT.type.equals("Square ft")) {
+            accT.subTitleText.setText("Square ft - ");
             accT.ccBox.setVisibility(View.VISIBLE);
         } else {
             accT.ccBox.setVisibility(View.INVISIBLE);
@@ -110,6 +116,15 @@ public class AccessoryType {
         // *2 to account for dividers
         accT.row.addView(accT.view, index);
         accT.row.addView(accT.line, index + 1);
+
+        // add to pricing linear layout
+        LayoutInflater inflater = (LayoutInflater) AccessoriesFragment.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View type = inflater.inflate(R.layout.cost_layout_item, AccessoriesFragment.pContainer, false);
+        TextView title = (TextView) type.findViewById(R.id.cli_title);
+        title.setText(accT.title.getText().toString());
+        // for accessories to calculate the prices
+        accT.costs = (LinearLayout) type.findViewById(R.id.item_container);
+        AccessoriesFragment.pContainer.addView(type);
     }
 
     public static AccessoryType addAccessoryType(String mTitle, String mType, boolean ADD) {
@@ -125,12 +140,9 @@ public class AccessoryType {
             toast.show();
             return null;
         }
-
-        // TODO: add to pricing linear layout
-        
     }
 
-    public static void removeAccessoryType(AccessoryType accT) {
+    public void removeAccessoryType(AccessoryType accT) {
         accT.row.removeView(accT.view);
         accT.row.removeView(accT.line);
         AccessoriesFragment.AccessoryList.remove(accT);

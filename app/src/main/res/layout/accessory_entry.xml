@@ -6,18 +6,6 @@
     android:layout_margin="10dp"
     android:id="@+id/item">
 
-    <EditText
-        android:clickable="true"
-        android:inputType="number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="25dp"
-        android:background="@drawable/border"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:padding="5dp"
-        android:textColor="@android:color/white"
-        android:id="@+id/count"/>
-
     <TextView
         android:clickable="true"
         android:layout_width="wrap_content"
@@ -26,8 +14,21 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:padding="5dp"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/count"
         android:id="@+id/button" />
+
+    <EditText
+        android:clickable="true"
+        android:visibility="invisible"
+        android:inputType="number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:background="@drawable/border"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:padding="5dp"
+        android:textColor="@android:color/white"
+        android:layout_toRightOf="@id/button"
+        android:id="@+id/count"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
