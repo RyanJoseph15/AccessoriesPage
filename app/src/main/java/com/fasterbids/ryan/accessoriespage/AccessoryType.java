@@ -102,10 +102,10 @@ public class AccessoryType {
 
     public static void AddAccTypeToLinLayout(AccessoryType accT) {
         if (accT.type.equals("Linear ft")) {
-            accT.subTitleText.setText("Linear ft - ");
+            accT.subTitleText.setText("Lin ft - ");
             accT.ccBox.setVisibility(View.VISIBLE);
         } else if (accT.type.equals("Square ft")) {
-            accT.subTitleText.setText("Square ft - ");
+            accT.subTitleText.setText("Sqr ft - ");
             accT.ccBox.setVisibility(View.VISIBLE);
         } else {
             accT.ccBox.setVisibility(View.INVISIBLE);

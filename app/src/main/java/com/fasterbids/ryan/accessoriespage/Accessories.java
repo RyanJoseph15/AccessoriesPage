@@ -23,13 +23,15 @@ public class Accessories extends Activity {
             @Override
             public void onClick(View v) {
                 if (getFragmentManager().findFragmentByTag("accFrag") == null) {
-                    Log.d("accFrag found", "false");
+                    Log.e("accFrag found", "false");
                     Accessories.setBackgroundColor(getResources().getColor(R.color.grey));
                     getFragmentManager().beginTransaction().add(R.id.accessories_fragment_container,
                             new AccessoriesFragment(), "accFrag").addToBackStack(null).commit();
                 } else {
-                    Log.d("accFrag found", "true");
+                    Log.e("accFrag found", "true");
                     Accessories.setBackgroundColor(getResources().getColor(R.color.blue));
+                    AccessoriesFragment frag = (AccessoriesFragment) getFragmentManager().findFragmentByTag("accFrag");
+                    frag.revokeAdminPermission();
                     getFragmentManager().popBackStack();
                 }
             }

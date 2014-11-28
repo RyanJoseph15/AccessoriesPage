@@ -85,16 +85,17 @@ public class AccSQLiteHelper extends SQLiteOpenHelper {
     }
     public void addAcc(Accessory acc) {
         Log.d("addAcc", acc.id);
-        ourDb = getReadableDatabase();
+        ourDb = getWritableDatabase();
         String title = acc.title.getText().toString().replaceAll(" ", "_");
         String type = acc.parentTitle.replaceAll(" ", "_");
         String count = acc.count.getText().toString();
         String cost = acc.costAmount.getText().toString();
         int selected = 0;       // 0 = false
-        if (acc.title.getBackground().equals(context.getResources().getColor(R.color.blue))) selected = 1;  // 1 = true
+        if (acc.selected) selected = 1;  // 1 = true
         String query = "INSERT INTO " + TABLE_ACCS + "(title, type, count, cost, selected) VALUES('"
                 + (title) + "', '" + (type) + "', '" + (count) + "', '" + (cost) + "', '" + (selected) + "')";
                 ourDb.execSQL(query);
+        Log.d("worked", "true");
     }
 
     public void populateAccessoriesFromDB(ArrayList<AccessoryType> types) {
@@ -145,6 +146,7 @@ public class AccSQLiteHelper extends SQLiteOpenHelper {
     }
 
     public void updateAcc(Accessory acc) {
+        Log.d("udpateAcc", acc.id);
         ContentValues cv = new ContentValues();
         String countt = "0";
         if (acc.count.getText().toString() != "") countt = acc.count.getText().toString();

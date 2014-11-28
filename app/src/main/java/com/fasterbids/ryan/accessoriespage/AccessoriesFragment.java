@@ -27,6 +27,7 @@ public class AccessoriesFragment extends Fragment {
     static AccessoriesFragment fragment;
     static AccSQLiteHelper SQLiteHelper;
     static LinearLayout pContainer;
+    static TextView pTotalCost;
 
     static ArrayList<AccessoryType> AccessoryList;
 
@@ -67,6 +68,7 @@ public class AccessoriesFragment extends Fragment {
         View pricing = inflater.inflate(R.layout.costs_layout, layout, false);
         accTitleLayout.addView(pricing);
         pContainer = (LinearLayout) pricing.findViewById(R.id.costs_container);
+        pTotalCost = (TextView) pricing.findViewById(R.id.total_cost);
         addAndSave = (RelativeLayout) v.findViewById(R.id.add_and_save);
 
         saveButton = (TextView) v.findViewById(R.id.save_changes);
@@ -143,6 +145,12 @@ public class AccessoriesFragment extends Fragment {
                 acc.ccBox.setVisibility(View.INVISIBLE);
             }
         }
+    }
+
+    public void updateTotalCosts(String sCost) {
+        float cost = Float.parseFloat(sCost);
+        float current = Float.parseFloat(pTotalCost.getText().toString());
+        pTotalCost.setText(String.valueOf(current + cost));
     }
 
 }

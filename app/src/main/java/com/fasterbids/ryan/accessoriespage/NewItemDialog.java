@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -39,7 +40,7 @@ public class NewItemDialog extends DialogFragment {
                                 EditText cost = (EditText) view.findViewById(R.id.item_cost_value);
 //                                Accessory acc = new Accessory(null, null, null, null, null, null, null);
 //                                acc.AddAccessory(name.getText().toString(), cost.getText().toString(), parent, true);
-                                Accessory acc = Accessory.AddAccessory(name.getText().toString(), null, cost.getText().toString(), parent, true, false);
+                                Accessory acc = Accessory.AddAccessory(name.getText().toString(), cost.getText().toString(), null, parent, true, false);
                                 getDialog().dismiss();
                             }
                         })
