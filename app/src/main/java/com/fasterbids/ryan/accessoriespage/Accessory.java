@@ -1,7 +1,6 @@
 package com.fasterbids.ryan.accessoriespage;
 
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -169,6 +168,28 @@ public class Accessory {
         return okayToAdd;   // if the acc was added
     }
 
+    public static View updateItemSaleCost(Accessory acc, LayoutInflater inflater, AccessoryType parentT) {
+        View item = inflater.inflate(R.layout.cost_item, parentT.costContainer, false);
+        TextView vCost = (TextView) item.findViewById(R.id.cost);
+        TextView vTitle = (TextView) item.findViewById(R.id.title);
+        TextView vQuant = (TextView) item.findViewById(R.id.quantity);
+        vTitle.setText(acc.title.getText().toString());
+        float cost = Float.parseFloat(acc.costAmount.getText().toString());
+        if (parentT.type.equals("Linear ft") || parentT.type.equals("Square ft")) {
+            int amount = Integer.valueOf(parentT.subTitleAmount.getText().toString());
+            float fCost = amount * cost;
+            vCost.setText(String.valueOf(fCost));
+            vQuant.setText(parentT.subTitleAmount.getText().toString());
+        } else if (parentT.type.equals("per unit")) {
+            int count = Integer.valueOf(acc.count.getText().toString());
+            float fCost = count * cost;
+            vCost.setText(String.valueOf(fCost));
+            vQuant.setText(acc.count.getText().toString());
+        }
+        AccessoriesFragment.fragment.updateTotalCosts(vCost.getText().toString());
+        return item;
+    }
+
     public static void AddAccToLinLayout(Accessory acc, LinearLayout parent) {
         acc.item.addView(acc.view);
 
@@ -184,25 +205,9 @@ public class Accessory {
         }
         if (parentT != null && acc.selected) {
             // we have found the parent type and the accessory is selected
-            View item = inflater.inflate(R.layout.cost_item, parentT.costs, false);
-            TextView vCost = (TextView) item.findViewById(R.id.cost);
-            TextView vTitle = (TextView) item.findViewById(R.id.title);
-            TextView vQuant = (TextView) item.findViewById(R.id.quantity);
-            vTitle.setText(acc.title.getText().toString());
-            float cost = Float.parseFloat(acc.costAmount.getText().toString());
-            if (parentT.type.equals("Linear ft") || parentT.type.equals("Square ft")) {
-                int amount = Integer.valueOf(parentT.subTitleAmount.getText().toString());
-                float fCost = amount * cost;;
-                vCost.setText(String.valueOf(fCost));
-                vQuant.setText(parentT.subTitleAmount.getText().toString());
-            } else if (parentT.type.equals("per unit")) {
-                int count = Integer.valueOf(acc.count.getText().toString());
-                float fCost = count * cost;
-                vCost.setText(String.valueOf(fCost));
-                vQuant.setText(acc.count.getText().toString());
-            }
+            View item = updateItemSaleCost(acc, inflater, parentT);
             // add it
-            parentT.costs.addView(item);
+            parentT.costContainer.addView(item);
             acc.title.setBackgroundColor(AccessoriesFragment.context.getResources().getColor(R.color.blue));
         }
     }

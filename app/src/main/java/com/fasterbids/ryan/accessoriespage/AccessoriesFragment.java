@@ -41,7 +41,7 @@ public class AccessoriesFragment extends Fragment {
         return fragment;
     }
     public AccessoriesFragment() {
-        // Required empty public constructor
+        fragment = this;
     }
 
     @Override
@@ -149,8 +149,11 @@ public class AccessoriesFragment extends Fragment {
 
     public void updateTotalCosts(String sCost) {
         float cost = Float.parseFloat(sCost);
-        float current = Float.parseFloat(pTotalCost.getText().toString());
-        pTotalCost.setText(String.valueOf(current + cost));
+        float current = 0.0f;
+        if (!pTotalCost.getText().toString().equals("$0.00")) {
+            current = Float.parseFloat(pTotalCost.getText().toString());
+        }
+        pTotalCost.setText(String.format("%.2f", current + cost));
     }
 
 }

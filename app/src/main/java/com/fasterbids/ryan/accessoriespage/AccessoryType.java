@@ -1,7 +1,6 @@
 package com.fasterbids.ryan.accessoriespage;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -28,7 +27,7 @@ public class AccessoryType {
     View line;
     ArrayList<Accessory> accessoryList = new ArrayList<Accessory>();
 
-    LinearLayout costs;
+    LinearLayout costContainer;
 
     public AccessoryType(View mView, String mType, TextView mTitle, TextView mSubTitleText,
                          TextView mSubTitleAmount, TextView mAdd, LinearLayout mContainer,
@@ -123,7 +122,7 @@ public class AccessoryType {
         TextView title = (TextView) type.findViewById(R.id.cli_title);
         title.setText(accT.title.getText().toString());
         // for accessories to calculate the prices
-        accT.costs = (LinearLayout) type.findViewById(R.id.item_container);
+        accT.costContainer = (LinearLayout) type.findViewById(R.id.item_container);
         AccessoriesFragment.pContainer.addView(type);
     }
 
