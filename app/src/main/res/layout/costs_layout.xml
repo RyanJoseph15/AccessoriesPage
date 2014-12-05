@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 android:layout_width="match_parent" android:layout_height="match_parent"
 android:background="@color/wallet_bright_foreground_holo_light">
-
+<!--
 <TextView
     android:id="@+id/toggle_costs"
     android:clickable="true"
@@ -16,6 +16,7 @@ android:background="@color/wallet_bright_foreground_holo_light">
     android:background="@drawable/button_pressed"
     android:layout_marginRight="@dimen/activity_vertical_margin"
     />
+    -->
 <!-- to hold the cost_layout_items -->
 <LinearLayout
     android:id="@+id/costs_container"
@@ -23,33 +24,16 @@ android:background="@color/wallet_bright_foreground_holo_light">
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_below="@id/toggle_costs">
+    >
 </LinearLayout>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:visibility="visible"
-    android:id="@+id/divider"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingLeft="50dp"
-    android:paddingRight="50dp"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
-    android:layout_below="@id/costs_container">
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/background_light"/>
-
-</RelativeLayout>
 
 <RelativeLayout
     android:id="@+id/total"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentRight="true"
-    android:layout_below="@id/divider">
+    android:layout_marginRight="20dp"
+    android:layout_below="@id/costs_container">
     <TextView
         android:id="@+id/total_cost"
         android:layout_width="150dp"

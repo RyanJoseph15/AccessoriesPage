@@ -68,7 +68,7 @@ public class AccessoryType {
         LayoutInflater inflater = (LayoutInflater) AccessoriesFragment.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout row = (LinearLayout) AccessoriesFragment.myView.findViewById(R.id.accLinLayout);
         View acc = inflater.inflate(R.layout.accessory_type_layout, row, false);
-        View line = inflater.inflate(R.layout.line_divider, row, false);
+        View line = inflater.inflate(R.layout.line_divider_thick, row, false);
 
         //create accessoryType object
         TextView title = (TextView) acc.findViewById(R.id.title);
@@ -124,6 +124,14 @@ public class AccessoryType {
         // for accessories to calculate the prices
         accT.costContainer = (LinearLayout) type.findViewById(R.id.item_container);
         AccessoriesFragment.pContainer.addView(type);
+        View line = inflater.inflate(R.layout.line_divider_thin, AccessoriesFragment.pContainer, false);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.setMargins(350, 0, 0, 0);
+        line.setLayoutParams(params);
+        AccessoriesFragment.pContainer.addView(line);
     }
 
     public static AccessoryType addAccessoryType(String mTitle, String mType, boolean ADD) {

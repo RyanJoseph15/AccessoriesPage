@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 public class Accessory {
     String id;  // main text: lower case and stripped of spaces
+    AccessoryType parent;
     String parentTitle;
     View view;
     EditText count;
@@ -25,9 +26,15 @@ public class Accessory {
     TextView costUnits;
     LinearLayout item;
     boolean selected;
+    // following for displaying cost in "show cost" area
+    View costBox;
+    TextView costBoxCost;
+    TextView costBoxQuant;
+    TextView costBoxTitle;
 
-    public Accessory(View view, EditText mCount, TextView mMain, RelativeLayout mCCBox, EditText mCostAmount, TextView mCostUnits, LinearLayout item, boolean selected) {
+    public Accessory(View view, AccessoryType parent, EditText mCount, TextView mMain, RelativeLayout mCCBox, EditText mCostAmount, TextView mCostUnits, LinearLayout item, boolean selected) {
         this.view = view;
+        this.parent = parent;
         this.count = mCount;
         this.title = mMain;
         this.ccBox = mCCBox;
@@ -54,16 +61,20 @@ public class Accessory {
                                     acc.title.setBackgroundColor(AccessoriesFragment.context.getResources().getColor(R.color.common_signin_btn_dark_text_default));
                                     acc.selected = false;
                                     AccessoriesFragment.SQLiteHelper.updateAcc(acc);
+                                    acc.parent.costContainer.removeView(acc.costBox);
+                                    acc.costBox = null;
                                 }
                             }
                             break;
                         }
                     }
+                    //calcCost(Accessory.this);
                 }
                 // update the db info for acc
                 Accessory.this.selected = true;
                 Accessory.this.title.setBackgroundColor(AccessoriesFragment.context.getResources().getColor(R.color.blue));
                 AccessoriesFragment.SQLiteHelper.updateAcc(Accessory.this);
+                calcCost(Accessory.this);
             }
         });
         this.title.setOnLongClickListener(new View.OnLongClickListener() {
@@ -106,6 +117,7 @@ public class Accessory {
                     }
                     // update db info for the acc
                     AccessoriesFragment.SQLiteHelper.updateAcc(Accessory.this);
+                    //calcCost(Accessory.this);
                 }
             }
         });
@@ -129,7 +141,6 @@ public class Accessory {
         EditText costAmount = (EditText) acc.findViewById(R.id.cost_amount);
         costAmount.setText(mCost);
         RelativeLayout ccBox = (RelativeLayout) acc.findViewById(R.id.ccContainer);
-        Accessory newAcc = new Accessory(acc, count, main, ccBox, costAmount, costUnits, item, selected);
         // find parent view
         AccessoryType parentType = null;
         for (AccessoryType type : AccessoriesFragment.AccessoryList) {
@@ -137,8 +148,10 @@ public class Accessory {
                 parentType = type;
             }
         }
+        Accessory newAcc = null;
         // initialize some values
         if (parentType != null) {
+            newAcc = new Accessory(acc, parentType, count, main, ccBox, costAmount, costUnits, item, selected);
             newAcc.id = newAcc.title.getText().toString().toLowerCase().replaceAll(" ", "");
             String[] unitTypes = AccessoriesFragment.context.getResources().getStringArray(R.array.units_array);
             String type = parentType.type;
@@ -168,34 +181,48 @@ public class Accessory {
         return okayToAdd;   // if the acc was added
     }
 
-    public static View updateItemSaleCost(Accessory acc, LayoutInflater inflater, AccessoryType parentT) {
-        View item = inflater.inflate(R.layout.cost_item, parentT.costContainer, false);
+    private static void calcCost(Accessory acc) {
+        if (acc.costBox != null) {
+            float cost = Float.parseFloat(acc.costAmount.getText().toString());
+            if (acc.parent.type.equals("Linear ft") ||
+                    acc.parent.type.equals("Square ft")) {
+                int amount = Integer.valueOf(acc.parent.subTitleAmount.getText().toString());
+                float fCost = amount * cost;
+                acc.costBoxCost.setText(String.format("%.2f", fCost));
+                acc.costBoxQuant.setText(acc.parent.subTitleAmount.getText().toString());
+            } else if (acc.parent.type.equals("per unit")) {
+                int count = Integer.valueOf(acc.count.getText().toString());
+                float fCost = count * cost;
+                acc.costBoxCost.setText(String.format("%.2f", fCost));
+                acc.costBoxQuant.setText(acc.count.getText().toString());
+            }
+            AccessoriesFragment.fragment.updateTotalCosts();
+        } else {
+            View toAdd = updateItemSaleCost(acc);
+            acc.parent.costContainer.addView(toAdd);
+        }
+    }
+
+    public static View updateItemSaleCost(Accessory acc) {
+        LayoutInflater inflater = (LayoutInflater) AccessoriesFragment.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View item = inflater.inflate(R.layout.cost_item, acc.parent.costContainer, false);
         TextView vCost = (TextView) item.findViewById(R.id.cost);
         TextView vTitle = (TextView) item.findViewById(R.id.title);
         TextView vQuant = (TextView) item.findViewById(R.id.quantity);
-        vTitle.setText(acc.title.getText().toString());
+        acc.costBoxCost = vCost;
+        acc.costBoxTitle = vTitle;
+        acc.costBoxQuant = vQuant;
+        acc.costBox = item;
+        acc.costBoxTitle.setText(acc.title.getText().toString());
         float cost = Float.parseFloat(acc.costAmount.getText().toString());
-        if (parentT.type.equals("Linear ft") || parentT.type.equals("Square ft")) {
-            int amount = Integer.valueOf(parentT.subTitleAmount.getText().toString());
-            float fCost = amount * cost;
-            vCost.setText(String.valueOf(fCost));
-            vQuant.setText(parentT.subTitleAmount.getText().toString());
-        } else if (parentT.type.equals("per unit")) {
-            int count = Integer.valueOf(acc.count.getText().toString());
-            float fCost = count * cost;
-            vCost.setText(String.valueOf(fCost));
-            vQuant.setText(acc.count.getText().toString());
-        }
-        AccessoriesFragment.fragment.updateTotalCosts(vCost.getText().toString());
+        calcCost(acc);
         return item;
     }
 
     public static void AddAccToLinLayout(Accessory acc, LinearLayout parent) {
         acc.item.addView(acc.view);
-
         // add accessories and calculate the prices
-        LayoutInflater inflater = (LayoutInflater) AccessoriesFragment.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        // TODO: could be optimized by adding a reference in the acc obj to the accT obj - Later
+        // TODO: could be optimized by adding a reference in the acc obj to the accT obj - Do Later
         AccessoryType parentT = null;
         for (AccessoryType accT : AccessoriesFragment.AccessoryList) {
             if (accT.container.equals(parent)) {
@@ -205,7 +232,7 @@ public class Accessory {
         }
         if (parentT != null && acc.selected) {
             // we have found the parent type and the accessory is selected
-            View item = updateItemSaleCost(acc, inflater, parentT);
+            View item = updateItemSaleCost(acc);
             // add it
             parentT.costContainer.addView(item);
             acc.title.setBackgroundColor(AccessoriesFragment.context.getResources().getColor(R.color.blue));
@@ -239,5 +266,5 @@ public class Accessory {
         }
         return null;
     }
-    
+
 }

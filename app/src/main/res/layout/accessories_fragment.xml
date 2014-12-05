@@ -19,7 +19,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerInParent="true"
             android:id="@+id/textView" />
-
+<!--
         <ImageView
             android:background="@color/common_signin_btn_dark_text_default"
             android:layout_width="wrap_content"
@@ -29,6 +29,17 @@
             android:layout_alignParentRight="true"
             android:scaleX="2"
             android:scaleY="2"
+            android:layout_margin="20dp"
+            android:id="@+id/admin_button" />
+        -->
+        <TextView
+            android:background="@drawable/button_pressed_text_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Make Changes"
+            android:textSize="25sp"
+            android:clickable="true"
+            android:layout_alignParentRight="true"
             android:layout_margin="20dp"
             android:id="@+id/admin_button" />
     </RelativeLayout>

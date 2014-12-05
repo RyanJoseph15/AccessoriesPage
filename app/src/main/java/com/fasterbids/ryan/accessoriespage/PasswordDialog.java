@@ -27,14 +27,6 @@ public class PasswordDialog extends DialogFragment implements DialogInterface.On
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
-
-        /*getDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                AccessoriesFragment.grantAdminPermission();
-            }
-        }); */
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View view = inflater.inflate(R.layout.password_dialog, null);
@@ -44,23 +36,6 @@ public class PasswordDialog extends DialogFragment implements DialogInterface.On
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
                                 final EditText eText = (EditText) view.findViewById(R.id.passphrase_box);
-                                /* eText.setOnKeyListener(new View.OnKeyListener() {
-                                    @Override
-                                    public boolean onKey(View v, int keyCode, KeyEvent event) {
-                                        if (event.getAction() == KeyEvent.ACTION_DOWN)
-                                        {
-                                            switch (keyCode)
-                                            {
-                                                case KeyEvent.KEYCODE_DPAD_CENTER:
-                                                case KeyEvent.KEYCODE_ENTER:
-                                                    return true;
-                                                default:
-                                                    break;
-                                            }
-                                        }
-                                        return false;
-                                    }
-                                }); */
                                 checkPassphrase(eText);
                             }
                         })

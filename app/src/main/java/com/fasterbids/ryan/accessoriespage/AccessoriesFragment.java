@@ -15,13 +15,14 @@ import java.util.ArrayList;
 
 public class AccessoriesFragment extends Fragment {
 
-    ImageView adminButton;
+    TextView adminButton;
     static Context context;
     static boolean adminPermission = false;
     LinearLayout accTitleLayout;
     static View myView;
     TextView saveButton;
     TextView addAccButton;
+    TextView showCosts;
     RelativeLayout addAndSave;
     static FragmentManager fmanager;
     static AccessoriesFragment fragment;
@@ -79,7 +80,7 @@ public class AccessoriesFragment extends Fragment {
             }
         });
 
-        adminButton = (ImageView) v.findViewById(R.id.admin_button);
+        adminButton = (TextView) v.findViewById(R.id.admin_button);
         adminButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,6 +94,9 @@ public class AccessoriesFragment extends Fragment {
             }
         });
 
+        //showCosts = (TextView) v.findViewById(R.id.cli_title);
+        //showCosts.setOnClickListener(ShowCosts);
+
         fmanager = getFragmentManager();
 
         SharedPreferences accPrefs = context.getSharedPreferences("accessories", Context.MODE_PRIVATE);
@@ -105,7 +109,7 @@ public class AccessoriesFragment extends Fragment {
             /* create it */
             editor.putBoolean("inited", true);
             editor.commit();
-            /* SQLite stuff here */
+            /* suggestions for how to use page here */
         }
         return v;
     }
@@ -115,6 +119,14 @@ public class AccessoriesFragment extends Fragment {
         public void onClick(View v) {
             NewAccessoryDialog dialog = new NewAccessoryDialog();
             dialog.show(getFragmentManager(), "newAccessoryDialog");
+        }
+    };
+
+    View.OnClickListener ShowCosts = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Toast toast = Toast.makeText(getActivity(), "ShowCosts", Toast.LENGTH_SHORT);
+            toast.show();
         }
     };
 
@@ -147,13 +159,20 @@ public class AccessoriesFragment extends Fragment {
         }
     }
 
-    public void updateTotalCosts(String sCost) {
-        float cost = Float.parseFloat(sCost);
+    public void updateTotalCosts() {
         float current = 0.0f;
-        if (!pTotalCost.getText().toString().equals("$0.00")) {
-            current = Float.parseFloat(pTotalCost.getText().toString());
+        pTotalCost.setText("0.00");
+        for (AccessoryType accT : AccessoriesFragment.AccessoryList) {
+            for (Accessory acc : accT.accessoryList) {
+                if (acc.costBox != null) {
+                    float cost = Float.parseFloat(acc.costBoxCost.getText().toString());
+                    if (!pTotalCost.getText().toString().equals("$0.00")) {
+                        current = Float.parseFloat(pTotalCost.getText().toString());
+                    }
+                    pTotalCost.setText(String.format("%.2f", current + cost));
+                }
+            }
         }
-        pTotalCost.setText(String.format("%.2f", current + cost));
     }
 
 }
