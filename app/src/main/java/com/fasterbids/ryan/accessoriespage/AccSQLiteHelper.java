@@ -70,7 +70,7 @@ public class AccSQLiteHelper extends SQLiteOpenHelper {
                 "Upgrading database from version " + oldVersion + " to "
                         + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TYPES);
-        db.execSQL("DROP TALBE IF EXISTS " + TABLE_ACCS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACCS);
         onCreate(db);
     }
 
